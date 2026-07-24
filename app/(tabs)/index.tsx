@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import { Film, fetchFilms } from "@/lib/supabase";
-import FilmRow from "@/components/FilmRow";
-import { colors, radius, spacing } from "@/constants/theme";
+import FilmGrid from "@/components/FilmGrid";
+import HeroBanner from "@/components/HeroBanner";
+import TopBar from "@/components/TopBar";
+import { colors } from "@/constants/theme";
 
 export default function HomeScreen() {
   const [films, setFilms] = useState<Film[]>([]);
@@ -27,7 +29,6 @@ export default function HomeScreen() {
     );
   });
 
-  // Same four fixed categories as the web app
   const trending = filtered.filter((f) => f.trending);
   const newRelease = filtered.filter((f) => f.new_release);
   const aivOriginal = filtered.filter((f) => f.aiv_original);
@@ -42,41 +43,28 @@ export default function HomeScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <TextInput
-        style={styles.search}
-        placeholder="Search films..."
-        placeholderTextColor={colors.textFaint}
-        value={search}
-        onChangeText={setSearch}
-      />
+    <View style={styles.root}>
+      <TopBar films={films} search={search} onSearchChange={setSearch} />
 
-      <FilmRow title="Trending" films={trending} />
-      <FilmRow title="New Release" films={newRelease} />
-      <FilmRow title="AIV Original" films={aivOriginal} />
-      <FilmRow title="Independent" films={independent} />
-    </ScrollView>
+      <ScrollView style={styles.container}>
+        <HeroBanner />
+
+        <FilmGrid title="Trending" films={trending} />
+        <FilmGrid title="New Release" films={newRelease} />
+        <FilmGrid title="AIV Original" films={aivOriginal} />
+        <FilmGrid title="Independent" films={independent} />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
+  root: { flex: 1, backgroundColor: colors.background },
+  container: { flex: 1, backgroundColor: colors.background },
   loadingContainer: {
     flex: 1,
     backgroundColor: colors.background,
     justifyContent: "center",
     alignItems: "center",
-  },
-  search: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderWidth: 1,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    color: colors.text,
-    margin: spacing.lg,
   },
 });
