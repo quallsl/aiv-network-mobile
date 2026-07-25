@@ -1,48 +1,52 @@
 {
-  "expo": {
-    "name": "AIV Network",
-    "slug": "aiv-network-mobile",
-    "scheme": "aivnetwork",
-    "version": "1.0.0",
-    "orientation": "default",
-    "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.aivnetwork.mobile",
-      "infoPlist": {
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": false
-        }
-      }
-    },
-    "android": {
-      "package": "com.aivnetwork.mobile",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#000000"
-      }
-    },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store",
-      [
-        "react-native-google-cast",
-        {
-          "receiverAppId": "CC1AD845"
-        }
-      ]
-    ],
-    "extra": {
-      "router": {
-        "origin": false
-      }
-    }
-  }
+  "expo": {
+    "name": "AIV Network",
+    "slug": "aiv-network-mobile",
+    "scheme": "aivnetwork",
+    "version": "1.0.0",
+    "orientation": "default",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.aivnetwork.mobile",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false
+        },
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.aivnetwork.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "react-native-google-cast",
+        {
+          "receiverAppId": "CC1AD845"
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f12cdd0f-f1cc-4614-b1b8-36c80d5e0a3e"
+      }
+    }
+  }
 }
