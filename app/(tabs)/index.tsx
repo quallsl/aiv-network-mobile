@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { Film, fetchFilms } from "@/lib/supabase";
 import FilmGrid from "@/components/FilmGrid";
 import HeroBanner from "@/components/HeroBanner";
@@ -9,14 +9,23 @@ import { colors } from "@/constants/theme";
 export default function HomeScreen() {
   const [films, setFilms] = useState<Film[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    fetchFilms().then((data) => {
-      setFilms(data);
-      setLoading(false);
-    });
+  const loadFilms = useCallback(async () => {
+    const data = await fetchFilms();
+    setFilms(data);
   }, []);
+
+  useEffect(() => {
+    loadFilms().then(() => setLoading(false));
+  }, [loadFilms]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadFilms();
+    setRefreshing(false);
+  }, [loadFilms]);
 
   const filtered = films.filter((film) => {
     const query = search.trim().toLowerCase();
@@ -46,7 +55,16 @@ export default function HomeScreen() {
     <View style={styles.root}>
       <TopBar films={films} search={search} onSearchChange={setSearch} />
 
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.accent}
+          />
+        }
+      >
         <HeroBanner />
 
         <FilmGrid title="Trending" films={trending} />
