@@ -41,7 +41,7 @@
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-3940256099942544~1458002511</string>
+    <string>ca-app-pub-4013153499723354~6242106140</string>
     <key>GADDelayAppMeasurementInit</key>
     <false/>
     <key>ITSAppUsesNonExemptEncryption</key>
@@ -61,6 +61,8 @@
       <string>_googlecast._tcp</string>
       <string>_CC1AD845._googlecast._tcp</string>
     </array>
+     <key>NSCameraUsageDescription</key>
+    <string>AIV Network does not use the camera, but this permission may be requested by third-party SDKs used in the app.</string>
     <key>NSFaceIDUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your Face ID biometric data.</string>
     <key>NSLocalNetworkUsageDescription</key>
