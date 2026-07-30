@@ -38,11 +38,6 @@ export default function HomeScreen() {
     );
   });
 
-  const trending = filtered.filter((f) => f.trending);
-  const newRelease = filtered.filter((f) => f.new_release);
-  const aivOriginal = filtered.filter((f) => f.aiv_original);
-  const independent = filtered.filter((f) => !f.aiv_original);
-
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -67,10 +62,7 @@ export default function HomeScreen() {
       >
         <HeroBanner />
 
-        <FilmGrid title="Trending" films={trending} />
-        <FilmGrid title="New Release" films={newRelease} />
-        <FilmGrid title="AIV Original" films={aivOriginal} />
-        <FilmGrid title="Independent" films={independent} />
+        <FilmGrid title="Films" films={filtered} />
       </ScrollView>
     </View>
   );
