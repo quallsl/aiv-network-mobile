@@ -3,7 +3,7 @@
     "name": "AIV Network",
     "slug": "aiv-network-mobile",
     "scheme": "aivnetwork",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "default",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
