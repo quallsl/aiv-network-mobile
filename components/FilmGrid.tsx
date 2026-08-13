@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { Film } from "@/lib/supabase";
 import { getBunnyThumbnail, isYouTubeUrl } from "@/lib/bunny";
 import { colors, radius, spacing } from "@/constants/theme";
 
 // Bundled local fallback — no network dependency, so it can't itself 404
-const FALLBACK_THUMBNAIL = require("@/assets/film-placeholder.png");
+const FALLBACK_THUMBNAIL = require("../assets/images/film.placeholder.png");
 const COLUMNS = 3;
+const GRID_PADDING = spacing.lg;
+const CARD_GAP = spacing.md;
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const CARD_WIDTH =
+  (SCREEN_WIDTH - GRID_PADDING * 2 - CARD_GAP * (COLUMNS - 1)) / COLUMNS;
 
 function getYouTubeThumbnail(url: string): string | null {
   const match = url.match(
@@ -40,6 +46,7 @@ function FilmCard({ film }: { film: Film }) {
       <Image
         source={source}
         style={styles.thumbnail}
+        resizeMode="cover"
         onError={() => setUri(null)}
       />
       <Text style={styles.title} numberOfLines={1}>
@@ -68,7 +75,7 @@ export default function FilmGrid({ title, films }: { title: string; films: Film[
 const styles = StyleSheet.create({
   section: {
     marginBottom: spacing.lg,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: GRID_PADDING,
   },
   heading: {
     color: colors.text,
@@ -79,15 +86,16 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
+    gap: CARD_GAP,
   },
   card: {
-    width: `${100 / COLUMNS - 3}%`,
+    width: CARD_WIDTH,
     marginBottom: spacing.md,
   },
   thumbnail: {
-    width: "100%",
-    aspectRatio: 16 / 10,
+    width: CARD_WIDTH,
+    height: CARD_WIDTH * 0.625, // 16:10 aspect ratio, but as a fixed pixel height now
     borderRadius: radius.md,
     backgroundColor: colors.surface,
   },

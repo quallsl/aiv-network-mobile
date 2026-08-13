@@ -5,101 +5,128 @@ import { useAuth } from "@/lib/auth-context";
 import { colors, radius, spacing } from "@/constants/theme";
 
 export default function SignupScreen() {
-  const { signUp } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
+  const { signUp } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [confirmationSent, setConfirmationSent] = useState(false);
 
-  async function handleSignup() {
-    setError(null);
-    setSubmitting(true);
-    const { error } = await signUp(email, password);
-    setSubmitting(false);
+  async function handleSignup() {
+    setError(null);
+    setSubmitting(true);
+    const { error } = await signUp(email, password);
+    setSubmitting(false);
 
-    if (error) {
-      setError(error);
-      return;
-    }
+    if (error) {
+      setError(error);
+      return;
+    }
 
-    router.replace("/(tabs)");
-  }
+    setConfirmationSent(true);
+  }
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+  if (confirmationSent) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Check Your Email</Text>
+        <Text style={styles.confirmText}>
+          We sent a confirmation link to {email}. Please confirm your email
+          address, then sign in below.
+        </Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor={colors.textFaint}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
+        <Pressable
+          style={styles.button}
+          onPress={() => router.replace("/(auth)/login")}
+        >
+          <Text style={styles.buttonText}>Go to Sign In</Text>
+        </Pressable>
+      </View>
+    );
+  }
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor={colors.textFaint}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Create Account</Text>
 
-      {error && <Text style={styles.error}>{error}</Text>}
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor={colors.textFaint}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
+      />
 
-      <Pressable
-        style={[styles.button, submitting && styles.buttonDisabled]}
-        onPress={handleSignup}
-        disabled={submitting}
-      >
-        <Text style={styles.buttonText}>{submitting ? "Creating account..." : "Sign Up"}</Text>
-      </Pressable>
-    </View>
-  );
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor={colors.textFaint}
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+
+      {error && <Text style={styles.error}>{error}</Text>}
+
+      <Pressable
+        style={[styles.button, submitting && styles.buttonDisabled]}
+        onPress={handleSignup}
+        disabled={submitting}
+      >
+        <Text style={styles.buttonText}>{submitting ? "Creating account..." : "Sign Up"}</Text>
+      </Pressable>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: spacing.lg,
-    justifyContent: "center",
-  },
-  title: {
-    color: colors.text,
-    fontSize: 24,
-    fontWeight: "700",
-    marginBottom: spacing.xl,
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderWidth: 1,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    color: colors.text,
-    marginBottom: spacing.md,
-  },
-  error: {
-    color: colors.accent,
-    marginBottom: spacing.md,
-  },
-  button: {
-    backgroundColor: colors.accent,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.sm,
-  },
-  buttonDisabled: {
-    opacity: 0.6,
-  },
-  buttonText: {
-    color: colors.text,
-    fontWeight: "700",
-  },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: spacing.lg,
+    justifyContent: "center",
+  },
+  title: {
+    color: colors.text,
+    fontSize: 24,
+    fontWeight: "700",
+    marginBottom: spacing.xl,
+    textAlign: "center",
+  },
+  confirmText: {
+    color: colors.textMuted,
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+    marginBottom: spacing.xl,
+  },
+  input: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderWidth: 1,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    color: colors.text,
+    marginBottom: spacing.md,
+  },
+  error: {
+    color: colors.accent,
+    marginBottom: spacing.md,
+  },
+  button: {
+    backgroundColor: colors.accent,
+    borderRadius: radius.md,
+    padding: spacing.md,
+    alignItems: "center",
+    marginTop: spacing.sm,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: colors.text,
+    fontWeight: "700",
+  },
 });
