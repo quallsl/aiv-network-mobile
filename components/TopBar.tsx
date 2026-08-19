@@ -44,6 +44,13 @@ export default function TopBar({
         <Text style={styles.buttonText}>+ Submit</Text>
       </Pressable>
 
+      <Pressable
+        style={styles.settingsButton}
+        onPress={() => router.push("/(tabs)/settings")}
+      >
+        <Text style={styles.buttonText}>⚙</Text>
+      </Pressable>
+
       <Modal visible={showMenu} animationType="fade" transparent>
         <Pressable style={styles.overlay} onPress={() => setShowMenu(false)}>
           <View style={styles.menuPanel}>
@@ -91,6 +98,14 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: colors.accent,
+    borderRadius: radius.sm,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+  },
+  settingsButton: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderWidth: 1,
     borderRadius: radius.sm,
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.sm,

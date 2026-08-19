@@ -126,9 +126,34 @@ export default function TermsPage() {
             these Terms, applicable law, or reports from third parties
             asserting infringement or other harm.
           </p>
-
+         <section style={{ marginBottom: "32px" }}>
+          <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
+            7.Account Deletion &amp; Content Retention
+          </h2>
+          <p style={{ color: "#ccc", lineHeight: 1.6 }}>
+            You may delete your AIV Network account at any time from the
+            Settings screen in the mobile app or by contacting{" "}
+            <a href="mailto:support@aivnetwork.online" style={{ color: "#e50914" }}>
+              support@aivnetwork.online
+            </a>
+            . Deleting your account permanently removes your login
+            credentials and personal account information from our systems.
+          </p>
+          <p style={{ color: "#ccc", lineHeight: 1.6, marginTop: "12px" }}>
+            If you are a filmmaker who has submitted Content to the Service,
+            deleting your account does not remove previously submitted
+            Content from the platform. By submitting Content, you
+            acknowledge and agree that AIV Network LLC retains the license
+            described above to continue hosting and distributing that
+            Content for up to 180 days following account deletion, after
+            which the Content will be removed from the Service. During this
+            180-day period, you will no longer receive any advertising
+            revenue attributable to your Content; AIV Network LLC retains
+            any such revenue generated during this period.
+          </p>
+          </section>
           <h3 style={{ fontSize: "18px", marginTop: "24px", marginBottom: "8px" }}>
-            7. Advertising &amp; Monetization
+            8. Advertising &amp; Monetization
           </h3>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             AIV Network is an ad-supported platform. Content submitted to the
@@ -140,7 +165,7 @@ export default function TermsPage() {
           </p>
 
           <h3 style={{ fontSize: "18px", marginTop: "24px", marginBottom: "8px" }}>
-            8. Indemnification
+            9. Indemnification
           </h3>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             You agree to indemnify and hold harmless AIV Network LLC, its
@@ -153,7 +178,7 @@ export default function TermsPage() {
 
         <section style={{ marginBottom: "32px" }}>
           <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
-            9. Intellectual Property
+            10. Intellectual Property
           </h2>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             Except for Content submitted by filmmakers under the license
@@ -166,7 +191,7 @@ export default function TermsPage() {
 
         <section style={{ marginBottom: "32px" }}>
           <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
-            10. Disclaimers
+            11. Disclaimers
           </h2>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             The Service is provided "as is" and "as available" without
@@ -178,7 +203,7 @@ export default function TermsPage() {
 
         <section style={{ marginBottom: "32px" }}>
           <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
-            11. Limitation of Liability
+            12. Limitation of Liability
           </h2>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             To the fullest extent permitted by law, AIV Network LLC shall not
@@ -190,7 +215,7 @@ export default function TermsPage() {
 
         <section style={{ marginBottom: "32px" }}>
           <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
-            12. Termination
+            13. Termination
           </h2>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             We may suspend or terminate your access to the Service at any
@@ -201,7 +226,7 @@ export default function TermsPage() {
 
         <section style={{ marginBottom: "32px" }}>
           <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
-            13. Changes to These Terms
+            14. Changes to These Terms
           </h2>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             We may update these Terms from time to time. Material changes
@@ -213,7 +238,7 @@ export default function TermsPage() {
 
         <section style={{ marginBottom: "32px" }}>
           <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
-            14. Governing Law
+            15. Governing Law
           </h2>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             These Terms are governed by the laws of the State of Ohio,
@@ -223,7 +248,7 @@ export default function TermsPage() {
 
         <section>
           <h2 style={{ fontSize: "20px", marginBottom: "10px" }}>
-            15. Contact
+            16. Contact
           </h2>
           <p style={{ color: "#ccc", lineHeight: 1.6 }}>
             Questions about these Terms can be directed to{" "}
