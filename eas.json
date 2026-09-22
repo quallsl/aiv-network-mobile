@@ -31,6 +31,13 @@
       "android": {
         "image": "latest"
       }
+    },
+    "production-tv": {
+      "extends": "production",
+      "env": { "EXPO_TV": "1" },
+      "ios": {
+        "image": "latest"
+      }
     }
   },
   "submit": {
