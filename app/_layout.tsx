@@ -1,6 +1,4 @@
 import React, { useEffect } from "react";
-import * as ScreenOrientation from "expo-screen-orientation";
-import mobileAds from "react-native-google-mobile-ads";
 import { Slot, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider, useAuth } from "@/lib/auth-context";
