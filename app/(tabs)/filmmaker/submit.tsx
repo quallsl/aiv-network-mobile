@@ -138,24 +138,24 @@ export default function SubmitFilmScreen() {
 
   return (
     <ScrollView style={styles.container}>
-            <Text style={styles.label}>Film Title *</Text>
-            
+            <Text style={styles.label}>Film Title *</Text>
+            
       <TextInput
         style={styles.input}
         value={title}
         onChangeText={setTitle}
         placeholderTextColor={colors.textFaint}
       />
-            <Text style={styles.label}>Creator / Director</Text>
-            
+            <Text style={styles.label}>Creator / Director</Text>
+            
       <TextInput
         style={styles.input}
         value={creator}
         onChangeText={setCreator}
         placeholderTextColor={colors.textFaint}
       />
-            <Text style={styles.label}>Description</Text>
-            
+            <Text style={styles.label}>Description</Text>
+            
       <TextInput
         style={[styles.input, styles.multiline]}
         value={description}
@@ -163,16 +163,16 @@ export default function SubmitFilmScreen() {
         multiline
         placeholderTextColor={colors.textFaint}
       />
-            <Text style={styles.label}>Genre</Text>
-            
+            <Text style={styles.label}>Genre</Text>
+            
       <TextInput
         style={styles.input}
         value={genre}
         onChangeText={setGenre}
         placeholderTextColor={colors.textFaint}
       />
-            <Text style={styles.label}>Release Year</Text>
-            
+            <Text style={styles.label}>Release Year</Text>
+            
       <TextInput
         style={styles.input}
         value={year}
@@ -180,8 +180,8 @@ export default function SubmitFilmScreen() {
         placeholderTextColor={colors.textFaint}
         keyboardType="number-pad"
       />
-            <Text style={styles.label}>Video URL *</Text>
-            
+            <Text style={styles.label}>Video URL *</Text>
+            
       <TextInput
         style={styles.input}
         value={videoUrl}
@@ -190,8 +190,8 @@ export default function SubmitFilmScreen() {
         placeholderTextColor={colors.textFaint}
         autoCapitalize="none"
       />
-            <Text style={styles.label}>Thumbnail URL</Text>
-            
+            <Text style={styles.label}>Thumbnail URL</Text>
+            
       <TextInput
         style={styles.input}
         value={thumbnailUrl}
@@ -200,27 +200,27 @@ export default function SubmitFilmScreen() {
         placeholderTextColor={colors.textFaint}
         autoCapitalize="none"
       />
-            
+            
       <Text style={styles.emailNote}>
-                Submitting as {session?.user?.email || "unknown"}
-              
+                Submitting as {session?.user?.email || "unknown"}
+              
       </Text>
-            {error && <Text style={styles.error}>{error}</Text>}
-            
+            {error && <Text style={styles.error}>{error}</Text>}
+            
       <Pressable
         style={[styles.submitButton, uploading && styles.submitButtonDisabled]}
         onPress={handleSubmit}
         disabled={uploading}
       >
-                
+                
         {uploading ? (
           <ActivityIndicator color={colors.text} />
         ) : (
           <Text style={styles.submitButtonText}>Submit Film</Text>
         )}
-              
+              
       </Pressable>
-          
+          
     </ScrollView>
   );
 }

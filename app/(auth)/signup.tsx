@@ -29,29 +29,29 @@ export default function SignupScreen() {
   if (confirmationSent) {
     return (
       <View style={styles.container}>
-                <Text style={styles.title}>Check Your Email</Text>
-                
+                <Text style={styles.title}>Check Your Email</Text>
+                
         <Text style={styles.confirmText}>
-                    We sent a confirmation link to {email}. Please confirm your
-          email           address, then sign in below.         
+                    We sent a confirmation link to {email}. Please confirm your
+          email           address, then sign in below.         
         </Text>
-                
+                
         <Pressable
           style={styles.button}
           onPress={() => router.replace("/(auth)/login")}
         >
-                    <Text style={styles.buttonText}>Go to Sign In</Text>
-                  
+                    <Text style={styles.buttonText}>Go to Sign In</Text>
+                  
         </Pressable>
-              
+              
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-            <Text style={styles.title}>Create Account</Text>
-            
+            <Text style={styles.title}>Create Account</Text>
+            
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -61,7 +61,7 @@ export default function SignupScreen() {
         value={email}
         onChangeText={setEmail}
       />
-            
+            
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -70,20 +70,20 @@ export default function SignupScreen() {
         value={password}
         onChangeText={setPassword}
       />
-            {error && <Text style={styles.error}>{error}</Text>}
-            
+            {error && <Text style={styles.error}>{error}</Text>}
+            
       <Pressable
         style={[styles.button, submitting && styles.buttonDisabled]}
         onPress={handleSignup}
         disabled={submitting}
       >
-                
+                
         <Text style={styles.buttonText}>
           {submitting ? "Creating account..." : "Sign Up"}
         </Text>
-              
+              
       </Pressable>
-          
+          
     </View>
   );
 }

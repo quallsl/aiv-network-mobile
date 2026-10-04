@@ -50,19 +50,19 @@ function FilmCard({ film }: { film: Film }) {
       style={styles.card}
       onPress={() => router.push(`/player/${film.id}`)}
     >
-            
+            
       <Image
         source={source}
         style={styles.thumbnail}
         resizeMode="cover"
         onError={() => setUri(null)}
       />
-            
+            
       <Text style={styles.title} numberOfLines={1}>
-                {film.title || "Untitled Film"}
-              
+                {film.title || "Untitled Film"}
+              
       </Text>
-          
+          
     </FocusPressable>
   );
 }
@@ -78,16 +78,16 @@ export default function FilmGrid({
 
   return (
     <View style={styles.section}>
-            <Text style={styles.heading}>{title}</Text>
-            
+            <Text style={styles.heading}>{title}</Text>
+            
       <View style={styles.grid}>
-                
+                
         {films.map((film) => (
           <FilmCard key={film.id} film={film} />
         ))}
-              
+              
       </View>
-          
+          
     </View>
   );
 }
