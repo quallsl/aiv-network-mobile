@@ -1,8 +1,9 @@
 import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text } from "react-native";
 import { router } from "expo-router";
 import { Film } from "@/lib/supabase";
 import { getBunnyThumbnail, isYouTubeUrl } from "@/lib/bunny";
+import FocusPressable from "@/components/FocusPressable";
 import { colors, radius, spacing } from "@/constants/theme";
 
 const FALLBACK_THUMBNAIL = "https://via.placeholder.com/320x180?text=No+Preview";
@@ -26,7 +27,7 @@ function getThumbnail(film: Film): string {
 
 export default function FilmCard({ film }: { film: Film }) {
   return (
-    <Pressable
+    <FocusPressable
       style={styles.card}
       onPress={() => router.push(`/player/${film.id}`)}
     >
@@ -34,7 +35,7 @@ export default function FilmCard({ film }: { film: Film }) {
       <Text style={styles.title} numberOfLines={1}>
         {film.title || "Untitled Film"}
       </Text>
-    </Pressable>
+    </FocusPressable>
   );
 }
 
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   card: {
     width: 140,
     marginRight: spacing.sm,
+    borderRadius: radius.md,
   },
   thumbnail: {
     width: 140,

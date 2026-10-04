@@ -4,6 +4,7 @@ import { Film, fetchFilms } from "@/lib/supabase";
 import FilmGrid from "@/components/FilmGrid";
 import HeroBanner from "@/components/HeroBanner";
 import TopBar from "@/components/TopBar";
+import GenreRow, { matchesGenre } from "@/components/GenreRow";
 import { colors } from "@/constants/theme";
 
 export default function HomeScreen() {
@@ -11,6 +12,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
+  const [genre, setGenre] = useState<string | null>(null);
 
   const loadFilms = useCallback(async () => {
     const data = await fetchFilms();
@@ -28,6 +30,8 @@ export default function HomeScreen() {
   }, [loadFilms]);
 
   const filtered = films.filter((film) => {
+    if (genre && !matchesGenre(film.genre, genre)) return false;
+
     const query = search.trim().toLowerCase();
     if (!query) return true;
 
@@ -62,7 +66,9 @@ export default function HomeScreen() {
       >
         <HeroBanner />
 
-        <FilmGrid title="Films" films={filtered} />
+        <GenreRow selected={genre} onSelect={setGenre} />
+
+        <FilmGrid title={genre ?? "Films"} films={filtered} />
       </ScrollView>
     </View>
   );

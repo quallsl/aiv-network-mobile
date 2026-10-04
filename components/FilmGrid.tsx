@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import FocusPressable from "@/components/FocusPressable";
 import { router } from "expo-router";
 import { Film } from "@/lib/supabase";
 import { getBunnyThumbnail, isYouTubeUrl } from "@/lib/bunny";
@@ -39,7 +40,7 @@ function FilmCard({ film }: { film: Film }) {
   const source = uri ? { uri } : FALLBACK_THUMBNAIL;
 
   return (
-    <Pressable
+    <FocusPressable
       style={styles.card}
       onPress={() => router.push(`/player/${film.id}`)}
     >
@@ -52,7 +53,7 @@ function FilmCard({ film }: { film: Film }) {
       <Text style={styles.title} numberOfLines={1}>
         {film.title || "Untitled Film"}
       </Text>
-    </Pressable>
+    </FocusPressable>
   );
 }
 
