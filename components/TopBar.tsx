@@ -69,7 +69,7 @@ export default function TopBar({
                   style={styles.menuItem}
                   onPress={() => {
                     setShowMenu(false);
-                    router.push(`/player/${item.id}`);
+                    router.push(`/film/${item.id}`);
                   }}
                 >
                   <Text style={styles.menuItemText} numberOfLines={1}>

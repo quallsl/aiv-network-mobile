@@ -48,7 +48,7 @@ function FilmCard({ film }: { film: Film }) {
   return (
     <FocusPressable
       style={styles.card}
-      onPress={() => router.push(`/player/${film.id}`)}
+      onPress={() => router.push(`/film/${film.id}`)}
     >
             
       <Image

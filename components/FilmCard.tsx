@@ -30,7 +30,7 @@ export default function FilmCard({ film }: { film: Film }) {
   return (
     <FocusPressable
       style={styles.card}
-      onPress={() => router.push(`/player/${film.id}`)}
+      onPress={() => router.push(`/film/${film.id}`)}
     >
       <Image source={{ uri: getThumbnail(film) }} style={styles.thumbnail} />
       <Text style={styles.title} numberOfLines={1}>
