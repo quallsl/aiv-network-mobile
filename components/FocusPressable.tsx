@@ -30,6 +30,5 @@ const styles = StyleSheet.create({
   focused: {
     borderColor: "#ffffff",
     borderWidth: 3,
-    transform: [{ scale: 1.06 }],
   },
 });

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
 import { supabase, Film } from "@/lib/supabase";
 import { getBunnyStreamUrl, isYouTubeUrl } from "@/lib/bunny";
 import VideoPlayer from "@/components/VideoPlayer";
@@ -27,8 +26,11 @@ export default function PlayerScreen() {
       });
   }, [id]);
 
-  // Allow rotation while this screen is open; lock back to portrait on leaving
+  // Phones/tablets: allow rotation while this screen is open, lock back to portrait on leaving.
+  // Apple TV has no screen orientation, so the module is never loaded there.
   useEffect(() => {
+    if (Platform.isTV) return;
+    const ScreenOrientation = require("expo-screen-orientation") as typeof import("expo-screen-orientation");
     ScreenOrientation.unlockAsync();
     return () => {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
@@ -60,13 +62,16 @@ export default function PlayerScreen() {
       <View style={styles.videoWrapper}>
         <VideoPlayer streamUrl={streamUrl} filmId={film.id} />
 
-        <Pressable
-          style={styles.backButton}
-          onPress={() => router.back()}
-          hitSlop={12}
-        >
-          <Text style={styles.backButtonText}>✕</Text>
-        </Pressable>
+        {/* On Apple TV the remote's Back/Menu button closes the player */}
+        {!Platform.isTV && (
+          <Pressable
+            style={styles.backButton}
+            onPress={() => router.back()}
+            hitSlop={12}
+          >
+            <Text style={styles.backButtonText}>✕</Text>
+          </Pressable>
+        )}
       </View>
 
       <View style={styles.details}>
