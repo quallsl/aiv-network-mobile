@@ -49,9 +49,9 @@ export default function TopBar({
 
       <FocusPressable
         style={styles.settingsButton}
-        onPress={() => router.push("/(tabs)/settings")}
+        onPress={() => router.push("/support")}
       >
-        <Text style={styles.buttonText}>⚙</Text>
+        <Text style={styles.buttonText}>Support</Text>
       </FocusPressable>
 
       <Modal visible={showMenu} animationType="fade" transparent>
