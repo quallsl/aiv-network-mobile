@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Slot, useRouter, useSegments } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider, useAuth } from "@/lib/auth-context";
 import { colors } from "@/constants/theme";
@@ -33,7 +33,7 @@ export default function RootLayout() {
       <View style={{ flex: 1, backgroundColor: colors.background }}>
         <StatusBar style="light" />
         <RouteGuard>
-          <Slot />
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }} />
         </RouteGuard>
       </View>
     </AuthProvider>
