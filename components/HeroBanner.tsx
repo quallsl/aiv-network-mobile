@@ -47,7 +47,10 @@ export default function HeroBanner() {
   }
 
   return (
-    <Pressable style={[styles.wrapper, { height: heroHeight }]} onPress={togglePause}>
+    <Pressable
+      style={[styles.wrapper, { height: heroHeight }]}
+      onPress={togglePause}
+    >
       {loading && (
         <ActivityIndicator
           style={StyleSheet.absoluteFill}

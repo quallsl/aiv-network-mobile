@@ -33,7 +33,12 @@ export default function RootLayout() {
       <View style={{ flex: 1, backgroundColor: colors.background }}>
         <StatusBar style="light" />
         <RouteGuard>
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }} />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: colors.background },
+            }}
+          />
         </RouteGuard>
       </View>
     </AuthProvider>

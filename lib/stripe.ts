@@ -14,7 +14,10 @@
 
 const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL as string; // e.g. https://aivnetwork.online
 
-export async function startStripeOnboarding(filmmakerId: string, email: string): Promise<string | null> {
+export async function startStripeOnboarding(
+  filmmakerId: string,
+  email: string,
+): Promise<string | null> {
   try {
     const res = await fetch(`${API_BASE}/api/stripe/create-account`, {
       method: "POST",

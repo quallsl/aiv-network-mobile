@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { supabase, Film } from "@/lib/supabase";
 import { getBunnyStreamUrl, isYouTubeUrl } from "@/lib/bunny";
@@ -30,10 +38,13 @@ export default function PlayerScreen() {
   // Apple TV has no screen orientation, so the module is never loaded there.
   useEffect(() => {
     if (Platform.isTV) return;
-    const ScreenOrientation = require("expo-screen-orientation") as typeof import("expo-screen-orientation");
+    const ScreenOrientation =
+      require("expo-screen-orientation") as typeof import("expo-screen-orientation");
     ScreenOrientation.unlockAsync();
     return () => {
-      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+      ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP,
+      );
     };
   }, []);
 
@@ -78,9 +89,13 @@ export default function PlayerScreen() {
         <Text style={styles.title}>{film.title || "Untitled Film"}</Text>
         <Text style={styles.meta}>
           {film.creator || "Independent Creator"} · {film.genre || "AI Film"}
-          {film.release_year || film.year ? ` · ${film.release_year || film.year}` : ""}
+          {film.release_year || film.year
+            ? ` · ${film.release_year || film.year}`
+            : ""}
         </Text>
-        {film.description && <Text style={styles.description}>{film.description}</Text>}
+        {film.description && (
+          <Text style={styles.description}>{film.description}</Text>
+        )}
       </View>
     </ScrollView>
   );

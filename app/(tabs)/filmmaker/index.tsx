@@ -11,14 +11,22 @@ export default function FilmmakerDashboard() {
     <View style={styles.container}>
       <Text style={styles.heading}>Filmmaker Dashboard</Text>
 
-      <Pressable style={styles.card} onPress={() => router.push("/(tabs)/filmmaker/submit")}>
+      <Pressable
+        style={styles.card}
+        onPress={() => router.push("/(tabs)/filmmaker/submit")}
+      >
         <Text style={styles.cardTitle}>Submit a Film</Text>
         <Text style={styles.cardSubtitle}>Upload directly to Bunny Stream</Text>
       </Pressable>
 
-      <Pressable style={styles.card} onPress={() => router.push("/(tabs)/filmmaker/payouts")}>
+      <Pressable
+        style={styles.card}
+        onPress={() => router.push("/(tabs)/filmmaker/payouts")}
+      >
         <Text style={styles.cardTitle}>Payouts</Text>
-        <Text style={styles.cardSubtitle}>Manage your Stripe Connect account</Text>
+        <Text style={styles.cardSubtitle}>
+          Manage your Stripe Connect account
+        </Text>
       </Pressable>
     </View>
   );

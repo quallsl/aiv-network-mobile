@@ -4,9 +4,18 @@ import FocusPressable from "@/components/FocusPressable";
 import { colors, spacing } from "@/constants/theme";
 
 // Same categories as the website
-export const GENRES = ["AIV Originals", "Classic Horror", "Sci-Fi", "Horror", "Comedy"];
+export const GENRES = [
+  "AIV Originals",
+  "Classic Horror",
+  "Sci-Fi",
+  "Horror",
+  "Comedy",
+];
 
-export function matchesGenre(filmGenre: string | null | undefined, genre: string): boolean {
+export function matchesGenre(
+  filmGenre: string | null | undefined,
+  genre: string,
+): boolean {
   if (!filmGenre) return false;
   return filmGenre
     .split(",")
@@ -22,7 +31,11 @@ export default function GenreRow({
   onSelect: (genre: string | null) => void;
 }) {
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.row}
+    >
       {GENRES.map((genre) => {
         const active = selected === genre;
         return (

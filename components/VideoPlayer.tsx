@@ -30,7 +30,11 @@ export default function VideoPlayer({
   return (
     <View style={styles.wrapper}>
       {loading && (
-        <ActivityIndicator style={StyleSheet.absoluteFill} color={colors.accent} size="large" />
+        <ActivityIndicator
+          style={StyleSheet.absoluteFill}
+          color={colors.accent}
+          size="large"
+        />
       )}
       <Video
         ref={videoRef}

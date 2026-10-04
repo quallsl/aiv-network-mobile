@@ -8,7 +8,9 @@ import { colors, spacing } from "@/constants/theme";
 export default function SearchScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Full search &amp; discovery — coming soon.</Text>
+      <Text style={styles.text}>
+        Full search &amp; discovery — coming soon.
+      </Text>
     </View>
   );
 }

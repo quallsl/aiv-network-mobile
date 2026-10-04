@@ -11,7 +11,10 @@ export default function ProfileScreen() {
     return (
       <View style={styles.container}>
         <Text style={styles.subtext}>Sign in to manage your account.</Text>
-        <Pressable style={styles.button} onPress={() => router.push("/(auth)/login")}>
+        <Pressable
+          style={styles.button}
+          onPress={() => router.push("/(auth)/login")}
+        >
           <Text style={styles.buttonText}>Sign In</Text>
         </Pressable>
       </View>

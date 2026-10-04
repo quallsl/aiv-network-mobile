@@ -58,7 +58,7 @@ export async function requestPreRollAd(videoId: string): Promise<void> {
       AdEventType.LOADED,
       () => {
         interstitial.show();
-      }
+      },
     );
 
     const unsubscribeClosed = interstitial.addAdEventListener(
@@ -68,7 +68,7 @@ export async function requestPreRollAd(videoId: string): Promise<void> {
         unsubscribeClosed();
         unsubscribeError();
         finish();
-      }
+      },
     );
 
     const unsubscribeError = interstitial.addAdEventListener(
@@ -79,7 +79,7 @@ export async function requestPreRollAd(videoId: string): Promise<void> {
         unsubscribeClosed();
         unsubscribeError();
         finish();
-      }
+      },
     );
 
     interstitial.load();

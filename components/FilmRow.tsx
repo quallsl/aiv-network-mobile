@@ -4,7 +4,13 @@ import { Film } from "@/lib/supabase";
 import FilmCard from "./FilmCard";
 import { colors, spacing } from "@/constants/theme";
 
-export default function FilmRow({ title, films }: { title: string; films: Film[] }) {
+export default function FilmRow({
+  title,
+  films,
+}: {
+  title: string;
+  films: Film[];
+}) {
   if (films.length === 0) return null;
 
   return (

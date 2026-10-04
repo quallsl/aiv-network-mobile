@@ -55,7 +55,9 @@ export default function LoginScreen() {
         onPress={handleLogin}
         disabled={submitting}
       >
-        <Text style={styles.buttonText}>{submitting ? "Signing in..." : "Sign In"}</Text>
+        <Text style={styles.buttonText}>
+          {submitting ? "Signing in..." : "Sign In"}
+        </Text>
       </Pressable>
 
       <Link href="/(auth)/signup" style={styles.link}>

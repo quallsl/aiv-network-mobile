@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { FlatList, Modal, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { router } from "expo-router";
 import { Film } from "@/lib/supabase";
 import FocusPressable from "@/components/FocusPressable";
@@ -18,7 +25,10 @@ export default function TopBar({
 
   return (
     <View style={styles.bar}>
-      <FocusPressable style={styles.menuButton} onPress={() => setShowMenu(true)}>
+      <FocusPressable
+        style={styles.menuButton}
+        onPress={() => setShowMenu(true)}
+      >
         <Text style={styles.buttonText}>☰ Menu</Text>
       </FocusPressable>
 

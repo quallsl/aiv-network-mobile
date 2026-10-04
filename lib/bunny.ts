@@ -5,7 +5,7 @@ function parseBunnyUrl(url: string | null) {
   if (!url) return null;
 
   const match = url.match(
-    /player\.mediadelivery\.net\/(?:play|embed)\/(\d+)\/([a-f0-9-]+)/i
+    /player\.mediadelivery\.net\/(?:play|embed)\/(\d+)\/([a-f0-9-]+)/i,
   );
 
   if (!match) return null;

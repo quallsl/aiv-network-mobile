@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Film, fetchFilms } from "@/lib/supabase";
 import FilmGrid from "@/components/FilmGrid";
 import HeroBanner from "@/components/HeroBanner";

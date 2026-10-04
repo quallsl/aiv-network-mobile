@@ -13,7 +13,10 @@ export default function PayoutsScreen() {
     if (!session?.user) return;
 
     setLoading(true);
-    const url = await startStripeOnboarding(session.user.id, session.user.email ?? "");
+    const url = await startStripeOnboarding(
+      session.user.id,
+      session.user.email ?? "",
+    );
     setLoading(false);
 
     if (url) {
@@ -25,10 +28,15 @@ export default function PayoutsScreen() {
     <View style={styles.container}>
       <Text style={styles.heading}>Payouts</Text>
       <Text style={styles.subtext}>
-        Connect a Stripe account to receive your share of ad revenue from views on your films.
+        Connect a Stripe account to receive your share of ad revenue from views
+        on your films.
       </Text>
 
-      <Pressable style={styles.button} onPress={handleOnboarding} disabled={loading}>
+      <Pressable
+        style={styles.button}
+        onPress={handleOnboarding}
+        disabled={loading}
+      >
         <Text style={styles.buttonText}>
           {loading ? "Loading..." : "Set Up Stripe Payouts"}
         </Text>
