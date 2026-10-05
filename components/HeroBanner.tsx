@@ -1,6 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  AppState,
   Platform,
   Pressable,
   StyleSheet,
@@ -9,6 +10,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import Video from "react-native-video";
+import { useIsFocused } from "@react-navigation/native";
 import { getBunnyStreamUrl } from "@/lib/bunny";
 import { requestPreRollAd } from "@/lib/ads";
 import { colors } from "@/constants/theme";
@@ -22,7 +24,19 @@ export default function HeroBanner() {
   const [loading, setLoading] = useState(true);
   const [paused, setPaused] = useState(true); // stays paused until ad resolves
   const [userPaused, setUserPaused] = useState(false);
+  const [appActive, setAppActive] = useState(AppState.currentState === "active");
   const adRequestedRef = useRef(false);
+
+  // Pause when another screen (film details / player) is pushed on top of Home
+  const isFocused = useIsFocused();
+
+  // Pause when the app is backgrounded (Siri Remote Home/TV button)
+  useEffect(() => {
+    const sub = AppState.addEventListener("change", (state) => {
+      setAppActive(state === "active");
+    });
+    return () => sub.remove();
+  }, []);
 
   const { width, height: screenHeight } = useWindowDimensions();
   // Phones: fixed 220. Apple TV: full 16:9 promo, capped at ~60% of the screen so the grid stays visible.
@@ -46,6 +60,8 @@ export default function HeroBanner() {
     setUserPaused((prev) => !prev);
   }
 
+  const shouldPause = paused || userPaused || !isFocused || !appActive;
+
   return (
     <Pressable
       style={[styles.wrapper, { height: heroHeight }]}
@@ -63,11 +79,11 @@ export default function HeroBanner() {
         source={{ uri: getBunnyStreamUrl(HERO_EMBED_URL) }}
         style={styles.video}
         resizeMode={Platform.isTV ? "contain" : "cover"}
-        muted={false}
+        muted={!isFocused}
         repeat
         playInBackground={false}
         controls={false}
-        paused={paused || userPaused}
+        paused={shouldPause}
         onLoad={handleLoad}
         onError={(e) => console.error("[hero] playback error:", e)}
       />
