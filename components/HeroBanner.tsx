@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   AppState,
@@ -10,7 +10,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import Video from "react-native-video";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 import { getBunnyStreamUrl } from "@/lib/bunny";
 import { requestPreRollAd } from "@/lib/ads";
 import { colors } from "@/constants/theme";
@@ -28,7 +28,13 @@ export default function HeroBanner() {
   const adRequestedRef = useRef(false);
 
   // Pause when another screen (film details / player) is pushed on top of Home
-  const isFocused = useIsFocused();
+  const [isFocused, setIsFocused] = useState(true);
+  useFocusEffect(
+    useCallback(() => {
+      setIsFocused(true);
+      return () => setIsFocused(false);
+    }, [])
+  );
 
   // Pause when the app is backgrounded (Siri Remote Home/TV button)
   useEffect(() => {
