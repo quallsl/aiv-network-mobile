@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Video from "react-native-video";
 import { requestPreRollAd } from "@/lib/ads";
@@ -12,40 +12,43 @@ export default function VideoPlayer({
   filmId: string;
 }) {
   const videoRef = useRef<any>(null);
+  const [adDone, setAdDone] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [paused, setPaused] = useState(false);
-  const adRequestedRef = useRef(false);
 
-  async function handleLoad() {
-    setLoading(false);
-
-    if (!adRequestedRef.current) {
-      adRequestedRef.current = true;
-      setPaused(true); // CONTENT_PAUSE_REQUESTED equivalent
-      await requestPreRollAd(filmId);
-      setPaused(false); // CONTENT_RESUME_REQUESTED equivalent
-    }
-  }
+  // Run the pre-roll BEFORE the film mounts, so the two can never overlap.
+  useEffect(() => {
+    let cancelled = false;
+    setAdDone(false);
+    setLoading(true);
+    requestPreRollAd(filmId).finally(() => {
+      if (!cancelled) setAdDone(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [filmId]);
 
   return (
     <View style={styles.wrapper}>
-      {loading && (
+      {(!adDone || loading) && (
         <ActivityIndicator
           style={StyleSheet.absoluteFill}
           color={colors.accent}
           size="large"
         />
       )}
-      <Video
-        ref={videoRef}
-        source={{ uri: streamUrl }}
-        style={styles.video}
-        controls
-        paused={paused}
-        resizeMode="contain"
-        onLoad={handleLoad}
-        onError={(e) => console.error("[player] playback error:", e)}
-      />
+      {adDone && (
+        <Video
+          ref={videoRef}
+          source={{ uri: streamUrl }}
+          style={styles.video}
+          controls
+          paused={false}
+          resizeMode="contain"
+          onLoad={() => setLoading(false)}
+          onError={(e) => console.error("[player] playback error:", e)}
+        />
+      )}
     </View>
   );
 }
