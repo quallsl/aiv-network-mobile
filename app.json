@@ -3,7 +3,7 @@
     "name": "AIV Network",
     "slug": "aiv-network-mobile",
     "scheme": "aivnetwork",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "default",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
@@ -50,7 +50,6 @@
       [
         "@react-native-tvos/config-tv",
         {
-          "isTV": true,
           "appleTVImages": {
             "icon": "./assets/tv/icon-1280x768.png",
             "iconSmall": "./assets/tv/icon-400x240.png",
