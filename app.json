@@ -62,7 +62,12 @@
           }
         }
       ],
-      "expo-tracking-transparency"
+           [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "AIV uses this to show you more relevant ads and keep films free to watch."
+        }
+      ]
     ],
     "extra": {
       "router": {

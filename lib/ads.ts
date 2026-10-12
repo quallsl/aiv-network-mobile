@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-
+import { ensureTrackingPermission } from "./tracking";
 // Same fallback VAST tag used in web's AVODPlayer.js, for dev/testing
 const TEST_VAST_TAG =
   "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&cust_params=sample_ct%3Dlinear&gdfp_req=1&output=vast&env=vp&unviewed_position_start=1&impl=s&correlator=";
@@ -34,7 +34,8 @@ export function getAdTagUrl(): string {
 export async function requestPreRollAd(videoId: string): Promise<void> {
   const ads = loadAds();
   if (!ads) return;
-
+  // ATT prompt (iPhone/iPad, first time only) must come before any ad request
+  await ensureTrackingPermission();
   const { AdEventType, InterstitialAd } = ads;
 
   return new Promise((resolve) => {
