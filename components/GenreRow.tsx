@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text } from "react-native";
 import FocusPressable from "@/components/FocusPressable";
 import { colors, spacing } from "@/constants/theme";
 
@@ -54,9 +54,9 @@ export default function GenreRow({
 
 const styles = StyleSheet.create({
   row: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.sm,
-    gap: spacing.sm,
+    paddingHorizontal: Platform.isTV ? 80 : spacing.sm,
+    paddingVertical: Platform.isTV ? 24 : spacing.sm,
+    gap: Platform.isTV ? 28 : spacing.sm,
     justifyContent: "center",
     flexGrow: 1,
   },
@@ -64,9 +64,10 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderWidth: 1,
     borderRadius: 999,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
+    paddingVertical: Platform.isTV ? 18 : spacing.sm,
+    paddingHorizontal: Platform.isTV ? 40 : spacing.md,
     backgroundColor: colors.background,
+    ...(Platform.isTV ? { minHeight: 72, justifyContent: "center" as const } : {}),
   },
   chipActive: {
     backgroundColor: colors.accent,
@@ -75,6 +76,6 @@ const styles = StyleSheet.create({
   chipText: {
     color: colors.text,
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: Platform.isTV ? 26 : 14,
   },
 });

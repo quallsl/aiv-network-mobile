@@ -68,8 +68,13 @@ export default function SupportScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  content: { padding: spacing.lg, paddingTop: Platform.isTV ? spacing.xl : 56, alignItems: "center" },
-  column: { width: "100%", maxWidth: 720 },
+  content: {
+    padding: spacing.lg,
+    paddingTop: Platform.isTV ? 60 : 56,
+    alignItems: "center",
+    ...(Platform.isTV ? { paddingHorizontal: 80, paddingBottom: 60 } : {}),
+  },
+  column: { width: "100%", maxWidth: Platform.isTV ? 1100 : 720 },
   heading: {
     color: colors.text,
     fontSize: Platform.isTV ? 40 : 28,
@@ -108,8 +113,9 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderWidth: 1,
     borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
+    paddingVertical: Platform.isTV ? 20 : spacing.md,
+    paddingHorizontal: Platform.isTV ? 48 : spacing.lg,
+    ...(Platform.isTV ? { minHeight: 80, justifyContent: "center" as const } : {}),
   },
-  backText: { color: colors.text, fontSize: Platform.isTV ? 22 : 16, fontWeight: "700" },
+  backText: { color: colors.text, fontSize: Platform.isTV ? 29 : 16, fontWeight: "700" },
 });

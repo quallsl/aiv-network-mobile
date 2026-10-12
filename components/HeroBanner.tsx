@@ -1,11 +1,20 @@
-import React, { useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  AppState,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import Video from "react-native-video";
+import { useFocusEffect } from "expo-router";
 import { getBunnyStreamUrl } from "@/lib/bunny";
 import { requestPreRollAd } from "@/lib/ads";
 import { colors } from "@/constants/theme";
-import { pick, tvSafe, tvType } from "@/constants/tv";
-import FocusPressable from "@/components/FocusPressable";
+import { pick, tvType } from "@/constants/tv";
 
 // Same AIV promo video used on the web hero (app/page.js)
 const HERO_EMBED_URL =
@@ -16,7 +25,31 @@ export default function HeroBanner() {
   const [loading, setLoading] = useState(true);
   const [paused, setPaused] = useState(true); // stays paused until ad resolves
   const [userPaused, setUserPaused] = useState(false);
+  const [appActive, setAppActive] = useState(AppState.currentState === "active");
   const adRequestedRef = useRef(false);
+
+  // Pause when another screen (film details / player) is pushed on top of Home
+  const [isFocused, setIsFocused] = useState(true);
+  useFocusEffect(
+    useCallback(() => {
+      setIsFocused(true);
+      return () => setIsFocused(false);
+    }, [])
+  );
+
+  // Pause when the app is backgrounded (Siri Remote Home/TV button)
+  useEffect(() => {
+    const sub = AppState.addEventListener("change", (state) => {
+      setAppActive(state === "active");
+    });
+    return () => sub.remove();
+  }, []);
+
+  const { width, height: screenHeight } = useWindowDimensions();
+  // Phones: fixed 220. Apple TV: full 16:9 promo, capped at ~60% of the screen so the grid stays visible.
+  const heroHeight = Platform.isTV
+    ? Math.round(Math.min((width * 9) / 16, screenHeight * 0.6))
+    : 220;
 
   async function handleLoad() {
     setLoading(false);
@@ -24,62 +57,60 @@ export default function HeroBanner() {
     if (!adRequestedRef.current) {
       adRequestedRef.current = true;
       await requestPreRollAd("hero-promo");
+      setPaused(false);
+    } else {
+      setPaused(false);
     }
-    setPaused(false);
   }
 
-  return (
-    <View style={styles.outer}>
-      <FocusPressable
-        style={styles.wrapper}
-        onPress={() => setUserPaused((prev) => !prev)}
-        hasTVPreferredFocus
-      >
-        {loading && (
-          <ActivityIndicator
-            style={StyleSheet.absoluteFill}
-            color={colors.accent}
-            size="large"
-          />
-        )}
-        <Video
-          ref={videoRef}
-          source={{ uri: getBunnyStreamUrl(HERO_EMBED_URL) }}
-          style={styles.video}
-          resizeMode="cover"
-          muted={false}
-          repeat
-          playInBackground={false}
-          controls={false}
-          paused={paused || userPaused}
-          onLoad={handleLoad}
-          onError={(e) => console.error("[hero] playback error:", e)}
-        />
+  function togglePause() {
+    setUserPaused((prev) => !prev);
+  }
 
-        {!loading && (
-          <View style={styles.playPauseIcon}>
-            <Text style={styles.playPauseText}>{userPaused ? "▶" : "❚❚"}</Text>
-          </View>
-        )}
-      </FocusPressable>
-    </View>
+  const shouldPause = paused || userPaused || !isFocused || !appActive;
+
+  return (
+    <Pressable
+      style={[styles.wrapper, { height: heroHeight }]}
+      onPress={togglePause}
+    >
+      {loading && (
+        <ActivityIndicator
+          style={StyleSheet.absoluteFill}
+          color={colors.accent}
+          size="large"
+        />
+      )}
+      <Video
+        ref={videoRef}
+        source={{ uri: getBunnyStreamUrl(HERO_EMBED_URL) }}
+        style={styles.video}
+        resizeMode={Platform.isTV ? "contain" : "cover"}
+        muted={!isFocused}
+        repeat
+        playInBackground={false}
+        controls={false}
+        paused={shouldPause}
+        onLoad={handleLoad}
+        onError={(e) => console.error("[hero] playback error:", e)}
+      />
+
+      {!loading && (
+        <View style={styles.playPauseIcon}>
+          <Text style={styles.playPauseText}>{userPaused ? "▶" : "❚❚"}</Text>
+        </View>
+      )}
+    </Pressable>
   );
 }
 
-const ICON = pick(36, 88);
+const ICON = pick(36, 80);
 
 const styles = StyleSheet.create({
-  // On TV the hero sits inside the overscan-safe margins
-  outer: {
-    paddingHorizontal: pick(0, tvSafe.horizontal),
-    marginBottom: pick(8, 48),
-  },
   wrapper: {
     width: "100%",
-    height: pick(220, 560),
     backgroundColor: colors.background,
-    borderRadius: pick(0, 16),
-    overflow: "hidden",
+    marginBottom: 8,
   },
   video: {
     width: "100%",
@@ -87,10 +118,10 @@ const styles = StyleSheet.create({
   },
   playPauseIcon: {
     position: "absolute",
-    bottom: pick(12, 32),
-    right: pick(12, 32),
-    backgroundColor: "rgba(0,0,0,0.6)",
-    borderRadius: ICON / 2,
+    bottom: pick(12, 60), // inside the TV safe area
+    right: pick(12, 80),
+    backgroundColor: "rgba(0,0,0,0.5)",
+    borderRadius: pick(20, 40),
     width: ICON,
     height: ICON,
     justifyContent: "center",
@@ -98,6 +129,6 @@ const styles = StyleSheet.create({
   },
   playPauseText: {
     color: "#fff",
-    fontSize: pick(14, tvType.title),
+    fontSize: pick(14, tvType.body),
   },
 });

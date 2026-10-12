@@ -11,18 +11,21 @@ export default function TabsLayout() {
         headerTintColor: colors.text,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textFaint,
-        // Apple TV: large tab bar across the top, inside the safe area
+        // Apple TV: large tab bar across the top, inside the safe area.
+        // Phones: unchanged bottom tab bar.
         tabBarPosition: IS_TV ? "top" : "bottom",
         tabBarStyle: IS_TV
           ? {
               backgroundColor: colors.background,
-              borderBottomColor: colors.border,
               borderTopWidth: 0,
               height: 140,
               paddingTop: tvSafe.vertical,
               paddingHorizontal: tvSafe.horizontal,
             }
-          : { backgroundColor: colors.surface, borderTopColor: colors.border },
+          : {
+              backgroundColor: colors.surface,
+              borderTopColor: colors.border,
+            },
         tabBarLabelStyle: IS_TV
           ? { fontSize: tvType.body, fontWeight: "700" }
           : undefined,
@@ -31,7 +34,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="index" options={{ title: "Home" }} />
       {/* Search is a placeholder and Filmmaker needs uploads/payouts —
-          neither belongs on Apple TV, so they're hidden there. */}
+          neither belongs on Apple TV, so they're hidden there only. */}
       <Tabs.Screen
         name="search"
         options={{ title: "Search", href: IS_TV ? null : undefined }}

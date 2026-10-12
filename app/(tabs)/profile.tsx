@@ -2,9 +2,9 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "@/lib/auth-context";
-import { colors, radius, spacing } from "@/constants/theme";
-import { pick, tvType } from "@/constants/tv";
 import FocusPressable from "@/components/FocusPressable";
+import { colors, radius, spacing } from "@/constants/theme";
+import { IS_TV, pick, tvType } from "@/constants/tv";
 
 export default function ProfileScreen() {
   const { session, signOut } = useAuth();
@@ -15,8 +15,8 @@ export default function ProfileScreen() {
         <Text style={styles.subtext}>Sign in to manage your account.</Text>
         <FocusPressable
           style={styles.button}
+          hasTVPreferredFocus={IS_TV}
           onPress={() => router.push("/(auth)/login")}
-          hasTVPreferredFocus
         >
           <Text style={styles.buttonText}>Sign In</Text>
         </FocusPressable>
@@ -28,7 +28,11 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       <Text style={styles.email}>{session.user.email}</Text>
 
-      <FocusPressable style={styles.button} onPress={signOut} hasTVPreferredFocus>
+      <FocusPressable
+        style={styles.button}
+        hasTVPreferredFocus={IS_TV}
+        onPress={signOut}
+      >
         <Text style={styles.buttonText}>Sign Out</Text>
       </FocusPressable>
     </View>
@@ -54,18 +58,22 @@ const styles = StyleSheet.create({
     marginBottom: pick(spacing.lg, 48),
   },
   button: {
-    minHeight: pick(44, tvType.controlHeight),
-    minWidth: pick(0, 420),
     backgroundColor: colors.accent,
     borderRadius: pick(radius.md, 12),
     paddingVertical: pick(spacing.md, 20),
-    paddingHorizontal: pick(spacing.xl, 48),
-    alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: pick(spacing.xl, 64),
+    ...(IS_TV
+      ? {
+          minHeight: tvType.controlHeight,
+          minWidth: 400,
+          alignItems: "center" as const,
+          justifyContent: "center" as const,
+        }
+      : {}),
   },
   buttonText: {
     color: colors.text,
     fontWeight: "700",
-    fontSize: pick(15, tvType.body),
+    ...(IS_TV ? { fontSize: tvType.body } : {}),
   },
 });

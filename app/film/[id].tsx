@@ -134,7 +134,9 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
-    paddingTop: Platform.isTV ? spacing.xl : 56,
+    paddingTop: Platform.isTV ? 60 : 56,
+    // Apple TV: keep everything inside the overscan-safe area
+    ...(Platform.isTV ? { paddingHorizontal: 80, paddingBottom: 60 } : {}),
   },
   center: {
     flex: 1,
@@ -174,23 +176,24 @@ const styles = StyleSheet.create({
   },
   meta: {
     color: colors.textMuted,
-    fontSize: Platform.isTV ? 22 : 14,
+    fontSize: Platform.isTV ? 26 : 14,
     marginBottom: spacing.lg,
   },
   buttons: {
     flexDirection: "row",
-    gap: spacing.md,
-    marginBottom: spacing.lg,
+    gap: Platform.isTV ? 32 : spacing.md,
+    marginBottom: Platform.isTV ? 40 : spacing.lg,
   },
   playButton: {
     backgroundColor: colors.accent,
     borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xl,
+    paddingVertical: Platform.isTV ? 20 : spacing.md,
+    paddingHorizontal: Platform.isTV ? 56 : spacing.xl,
+    ...(Platform.isTV ? { minHeight: 80, justifyContent: "center" as const } : {}),
   },
   playText: {
     color: colors.text,
-    fontSize: Platform.isTV ? 24 : 16,
+    fontSize: Platform.isTV ? 29 : 16,
     fontWeight: "800",
   },
   backButton: {
@@ -198,18 +201,19 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     borderWidth: 1,
     borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
+    paddingVertical: Platform.isTV ? 20 : spacing.md,
+    paddingHorizontal: Platform.isTV ? 48 : spacing.lg,
+    ...(Platform.isTV ? { minHeight: 80, justifyContent: "center" as const } : {}),
   },
   backText: {
     color: colors.text,
-    fontSize: Platform.isTV ? 24 : 16,
+    fontSize: Platform.isTV ? 29 : 16,
     fontWeight: "700",
   },
   description: {
     color: colors.text,
-    fontSize: Platform.isTV ? 22 : 15,
-    lineHeight: Platform.isTV ? 34 : 22,
+    fontSize: Platform.isTV ? 29 : 15,
+    lineHeight: Platform.isTV ? 42 : 22,
   },
   muted: {
     color: colors.textMuted,
