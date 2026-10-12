@@ -9,7 +9,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import Video from "react-native-video";
+import Video, { VideoRef } from "react-native-video";
 import { useFocusEffect } from "expo-router";
 import { getBunnyStreamUrl } from "@/lib/bunny";
 import { requestPreRollAd } from "@/lib/ads";
@@ -21,26 +21,52 @@ const HERO_EMBED_URL =
   "https://player.mediadelivery.net/embed/697977/264c75e3-cf23-4154-a081-98883ca50742";
 
 export default function HeroBanner() {
-  const videoRef = useRef(null);
+  const videoRef = useRef<VideoRef>(null);
   const [loading, setLoading] = useState(true);
   const [paused, setPaused] = useState(true); // stays paused until ad resolves
   const [userPaused, setUserPaused] = useState(false);
-  const [appActive, setAppActive] = useState(AppState.currentState === "active");
+  // Only a real trip to the background pauses the promo. At launch, Apple TV can
+  // report "unknown"/"inactive" and never send a change event, which used to
+  // leave the hero paused forever.
+  const [appActive, setAppActive] = useState(AppState.currentState !== "background");
   const adRequestedRef = useRef(false);
+
+  // Apple TV: a fresh player each time Home comes back, so the promo always
+  // restarts reliably after a film or after leaving the app (phones unchanged).
+  const [playerKey, setPlayerKey] = useState(0);
+  const leftHomeRef = useRef(false);
+  function restartOnTV() {
+    if (!Platform.isTV) return;
+    setLoading(true);
+    setPlayerKey((k) => k + 1);
+  }
 
   // Pause when another screen (film details / player) is pushed on top of Home
   const [isFocused, setIsFocused] = useState(true);
   useFocusEffect(
     useCallback(() => {
       setIsFocused(true);
-      return () => setIsFocused(false);
+      if (leftHomeRef.current) {
+        leftHomeRef.current = false;
+        restartOnTV();
+      }
+      return () => {
+        setIsFocused(false);
+        leftHomeRef.current = true;
+      };
     }, [])
   );
 
   // Pause when the app is backgrounded (Siri Remote Home/TV button)
   useEffect(() => {
+    let wasBackground = false;
     const sub = AppState.addEventListener("change", (state) => {
-      setAppActive(state === "active");
+      setAppActive(state !== "background");
+      if (state === "background") wasBackground = true;
+      if (state === "active" && wasBackground) {
+        wasBackground = false;
+        restartOnTV();
+      }
     });
     return () => sub.remove();
   }, []);
@@ -82,6 +108,7 @@ export default function HeroBanner() {
         />
       )}
       <Video
+        key={playerKey}
         ref={videoRef}
         source={{ uri: getBunnyStreamUrl(HERO_EMBED_URL) }}
         style={styles.video}
@@ -92,6 +119,10 @@ export default function HeroBanner() {
         controls={false}
         paused={shouldPause}
         onLoad={handleLoad}
+        // Backup for "repeat": if the promo reaches the end on Apple TV, loop it manually
+        onEnd={() => {
+          if (Platform.isTV) videoRef.current?.seek(0);
+        }}
         onError={(e) => console.error("[hero] playback error:", e)}
       />
 
