@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "@/lib/auth-context";
-import FocusPressable from "@/components/FocusPressable";
 import { colors, radius, spacing } from "@/constants/theme";
+import { pick, tvSafe, tvType } from "@/constants/tv";
+import FocusPressable from "@/components/FocusPressable";
 
 const API_BASE = process.env.EXPO_PUBLIC_API_BASE_URL as string;
 
@@ -12,7 +13,6 @@ export default function SettingsScreen() {
   const [deleting, setDeleting] = useState(false);
 
   const userEmail = session?.user?.email ?? "";
-  const signedIn = Boolean(session?.user);
 
   function confirmDelete() {
     Alert.alert(
@@ -21,7 +21,7 @@ export default function SettingsScreen() {
       [
         { text: "Cancel", style: "cancel" },
         { text: "Delete Account", style: "destructive", onPress: handleDelete },
-      ],
+      ]
     );
   }
 
@@ -42,6 +42,7 @@ export default function SettingsScreen() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, email }),
       });
+
       const data = await res.json();
 
       if (!res.ok) {
@@ -50,7 +51,7 @@ export default function SettingsScreen() {
         return;
       }
 
-      // Account is confirmed deleted server-side; only now clear the local session.
+      // Confirmed deleted server-side — now clear the local session.
       await signOut();
       router.replace("/(auth)/login");
     } catch (err) {
@@ -60,137 +61,143 @@ export default function SettingsScreen() {
     }
   }
 
+  // Signed-out state (guests can browse; nothing to manage yet)
+  if (!session) {
+    return (
+      <ScrollView style={styles.container} contentContainerStyle={styles.scroll}>
+        <View style={styles.column}>
+          <Text style={styles.heading}>Settings</Text>
+          <Text style={styles.body}>Sign in to manage your account.</Text>
+          <FocusPressable
+            style={styles.primaryButton}
+            onPress={() => router.push("/(auth)/login")}
+            hasTVPreferredFocus
+          >
+            <Text style={styles.buttonText}>Sign In</Text>
+          </FocusPressable>
+        </View>
+      </ScrollView>
+    );
+  }
+
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scroll}>
       <View style={styles.column}>
         <Text style={styles.heading}>Settings</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.sectionLabel}>ACCOUNT</Text>
+        <Text style={styles.label}>Signed in as</Text>
+        <Text style={styles.email}>{userEmail}</Text>
 
-          {signedIn ? (
-            <>
-              <Text style={styles.rowLabel}>Signed in as</Text>
-              <Text style={styles.email}>{userEmail}</Text>
+        <FocusPressable
+          style={styles.secondaryButton}
+          onPress={signOut}
+          hasTVPreferredFocus
+        >
+          <Text style={styles.buttonText}>Sign Out</Text>
+        </FocusPressable>
 
-              <FocusPressable style={styles.secondaryButton} onPress={signOut}>
-                <Text style={styles.buttonText}>Sign Out</Text>
-              </FocusPressable>
-            </>
-          ) : (
-            <>
-              <Text style={styles.email}>Browsing as guest</Text>
+        <View style={styles.divider} />
 
-              <FocusPressable
-                style={styles.primaryButton}
-                onPress={() => router.push("/(auth)/login")}
-              >
-                <Text style={styles.buttonText}>Sign In</Text>
-              </FocusPressable>
-            </>
-          )}
-        </View>
+        <Text style={styles.dangerHeading}>Delete Account</Text>
+        <Text style={styles.body}>
+          Deleting your account permanently removes your login and personal
+          information. If you have submitted films, they will remain available
+          on AIV Network for up to 180 days before being removed.
+        </Text>
 
-        {signedIn && (
-          <View style={[styles.card, styles.dangerCard]}>
-            <Text style={[styles.sectionLabel, styles.dangerLabel]}>DANGER ZONE</Text>
-
-            <Text style={styles.dangerText}>
-              Deleting your account permanently removes your login and personal information.
-              If you have submitted films, they will remain available on AIV Network for up to
-              180 days before being removed.
-            </Text>
-
-            <FocusPressable
-              style={[styles.primaryButton, deleting && styles.buttonDisabled]}
-              onPress={confirmDelete}
-              disabled={deleting}
-            >
-              <Text style={styles.buttonText}>{deleting ? "Deleting..." : "Delete Account"}</Text>
-            </FocusPressable>
-          </View>
-        )}
+        <FocusPressable
+          style={[styles.dangerButton, deleting && styles.disabled]}
+          onPress={confirmDelete}
+          disabled={deleting}
+        >
+          <Text style={styles.buttonText}>
+            {deleting ? "Deleting..." : "Delete Account"}
+          </Text>
+        </FocusPressable>
       </View>
     </ScrollView>
   );
 }
 
+const button = {
+  minHeight: pick(48, tvType.controlHeight),
+  borderRadius: pick(radius.md, 12),
+  paddingVertical: pick(spacing.md, 20),
+  paddingHorizontal: pick(spacing.lg, 48),
+  alignItems: "center" as const,
+  justifyContent: "center" as const,
+  alignSelf: pick("stretch" as const, "flex-start" as const),
+  minWidth: pick(0, 420),
+};
+
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
     backgroundColor: colors.background,
+    padding: pick(spacing.lg, 0),
   },
-  content: {
-    padding: spacing.lg,
-    alignItems: "center",
+  scroll: {
+    paddingHorizontal: pick(0, tvSafe.horizontal),
+    paddingVertical: pick(0, tvSafe.vertical),
   },
+  // Keeps TV content in a readable column instead of stretched edge-to-edge
   column: {
     width: "100%",
-    maxWidth: 720,
+    maxWidth: pick(undefined, 1000),
   },
   heading: {
     color: colors.text,
-    fontSize: 28,
+    fontSize: pick(24, tvType.heading),
     fontWeight: "700",
-    marginBottom: spacing.lg,
+    marginBottom: pick(spacing.md, 40),
   },
-  card: {
+  label: {
+    color: colors.textFaint,
+    fontSize: pick(12, tvType.small),
+    marginBottom: pick(2, 8),
+  },
+  email: {
+    color: colors.textMuted,
+    fontSize: pick(14, tvType.body),
+    marginBottom: pick(spacing.lg, 40),
+  },
+  body: {
+    color: colors.textMuted,
+    fontSize: pick(13, tvType.body),
+    lineHeight: pick(19, 42),
+    marginBottom: pick(spacing.lg, 40),
+  },
+  primaryButton: {
+    ...button,
+    backgroundColor: colors.accent,
+  },
+  secondaryButton: {
+    ...button,
     backgroundColor: colors.surface,
     borderColor: colors.border,
     borderWidth: 1,
-    borderRadius: radius.md,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
   },
-  dangerCard: {
-    borderColor: colors.accent,
-  },
-  sectionLabel: {
-    color: colors.textMuted,
-    fontSize: 12,
-    fontWeight: "700",
-    letterSpacing: 1,
-    marginBottom: spacing.md,
-  },
-  dangerLabel: {
-    color: colors.accent,
-  },
-  rowLabel: {
-    color: colors.textMuted,
-    fontSize: 13,
-    marginBottom: spacing.xs,
-  },
-  email: {
-    color: colors.text,
-    fontSize: 16,
-    marginBottom: spacing.lg,
-  },
-  dangerText: {
-    color: colors.textMuted,
-    fontSize: 14,
-    lineHeight: 21,
-    marginBottom: spacing.lg,
-  },
-  primaryButton: {
+  dangerButton: {
+    ...button,
     backgroundColor: colors.accent,
-    borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    alignItems: "center",
   },
-  secondaryButton: {
-    backgroundColor: colors.background,
-    borderColor: colors.border,
-    borderWidth: 1,
-    borderRadius: radius.md,
-    paddingVertical: spacing.md,
-    alignItems: "center",
-  },
-  buttonDisabled: {
+  disabled: {
     opacity: 0.6,
   },
   buttonText: {
     color: colors.text,
     fontWeight: "700",
-    fontSize: 15,
+    fontSize: pick(15, tvType.body),
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: pick(spacing.xl, 60),
+  },
+  dangerHeading: {
+    color: colors.accent,
+    fontSize: pick(16, tvType.title),
+    fontWeight: "700",
+    marginBottom: pick(spacing.sm, 20),
   },
 });

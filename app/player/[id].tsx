@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
 import { supabase, Film } from "@/lib/supabase";
 import { getBunnyStreamUrl, isYouTubeUrl } from "@/lib/bunny";
 import VideoPlayer from "@/components/VideoPlayer";
 import { colors, spacing } from "@/constants/theme";
+import { IS_TV, pick, tvSafe, tvType } from "@/constants/tv";
 
 export default function PlayerScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -34,17 +28,13 @@ export default function PlayerScreen() {
       });
   }, [id]);
 
-  // Phones/tablets: allow rotation while this screen is open, lock back to portrait on leaving.
-  // Apple TV has no screen orientation, so the module is never loaded there.
+  // Allow rotation while this screen is open; lock back to portrait on leaving
+  // (phones/iPads only — Apple TV has no orientation)
   useEffect(() => {
-    if (Platform.isTV) return;
-    const ScreenOrientation =
-      require("expo-screen-orientation") as typeof import("expo-screen-orientation");
+    if (IS_TV) return;
     ScreenOrientation.unlockAsync();
     return () => {
-      ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP,
-      );
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     };
   }, []);
 
@@ -73,8 +63,9 @@ export default function PlayerScreen() {
       <View style={styles.videoWrapper}>
         <VideoPlayer streamUrl={streamUrl} filmId={film.id} />
 
-        {/* On Apple TV the remote's Back/Menu button closes the player */}
-        {!Platform.isTV && (
+        {/* On Apple TV the Siri Remote Back/Menu button exits the player,
+            so the small on-screen ✕ is phone-only. */}
+        {!IS_TV && (
           <Pressable
             style={styles.backButton}
             onPress={() => router.back()}
@@ -89,13 +80,9 @@ export default function PlayerScreen() {
         <Text style={styles.title}>{film.title || "Untitled Film"}</Text>
         <Text style={styles.meta}>
           {film.creator || "Independent Creator"} · {film.genre || "AI Film"}
-          {film.release_year || film.year
-            ? ` · ${film.release_year || film.year}`
-            : ""}
+          {film.release_year || film.year ? ` · ${film.release_year || film.year}` : ""}
         </Text>
-        {film.description && (
-          <Text style={styles.description}>{film.description}</Text>
-        )}
+        {film.description && <Text style={styles.description}>{film.description}</Text>}
       </View>
     </ScrollView>
   );
@@ -134,24 +121,27 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: colors.textMuted,
+    fontSize: pick(14, tvType.body),
   },
   details: {
-    padding: spacing.lg,
+    paddingHorizontal: pick(spacing.lg, tvSafe.horizontal),
+    paddingVertical: pick(spacing.lg, 48),
+    maxWidth: pick(undefined, 1400),
   },
   title: {
     color: colors.text,
-    fontSize: 20,
+    fontSize: pick(20, tvType.heading),
     fontWeight: "700",
-    marginBottom: spacing.xs,
+    marginBottom: pick(spacing.xs, 16),
   },
   meta: {
     color: colors.textMuted,
-    fontSize: 13,
-    marginBottom: spacing.md,
+    fontSize: pick(13, tvType.body),
+    marginBottom: pick(spacing.md, 28),
   },
   description: {
     color: colors.textMuted,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: pick(14, tvType.body),
+    lineHeight: pick(20, 42),
   },
 });

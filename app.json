@@ -32,6 +32,7 @@
       }
     },
     "plugins": [
+      
       "expo-router",
       "expo-secure-store",
       [
@@ -60,7 +61,8 @@
             "topShelfWide2x": "./assets/tv/topshelf-wide-4640x1440.png"
           }
         }
-      ]
+      ],
+      "expo-tracking-transparency"
     ],
     "extra": {
       "router": {
