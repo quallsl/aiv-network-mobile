@@ -77,11 +77,28 @@ export default function HeroBanner() {
     ? Math.round(Math.min((width * 9) / 16, screenHeight * 0.6))
     : 220;
 
+    // iPad can silently drop an ad shown during launch. Wait until the app is
+  // fully active and settled before requesting the hero's pre-roll.
+  async function waitUntilSettled() {
+    if (AppState.currentState !== "active") {
+      await new Promise<void>((resolve) => {
+        const sub = AppState.addEventListener("change", (s) => {
+          if (s === "active") {
+            sub.remove();
+            resolve();
+          }
+        });
+      });
+    }
+    await new Promise((r) => setTimeout(r, 1500));
+  }
+
   async function handleLoad() {
     setLoading(false);
 
     if (!adRequestedRef.current) {
       adRequestedRef.current = true;
+      await waitUntilSettled();
       await requestPreRollAd("hero-promo");
       setPaused(false);
     } else {
