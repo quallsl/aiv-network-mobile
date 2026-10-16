@@ -1,11 +1,12 @@
 import { Platform } from "react-native";
-import { ensureTrackingPermission } from "./tracking";
+
 // Same fallback VAST tag used in web's AVODPlayer.js, for dev/testing
 const TEST_VAST_TAG =
   "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&cust_params=sample_ct%3Dlinear&gdfp_req=1&output=vast&env=vp&unviewed_position_start=1&impl=s&correlator=";
 
 const IOS_AD_UNIT_ID = "ca-app-pub-4013153499723354/7307087444";
-const LOAD_TIMEOUT_MS = 8000;
+const LOAD_TIMEOUT_MS = 8000; // ad must load within this
+const OPEN_TIMEOUT_MS = 5000; // after show(), ad must actually appear within this
 
 type AdsModule = typeof import("react-native-google-mobile-ads");
 
@@ -27,15 +28,14 @@ export function getAdTagUrl(): string {
 }
 
 /**
- * Shows a pre-roll interstitial. Resolves only when the ad is CLOSED,
- * errors, or fails to LOAD within the timeout. Once the ad is on screen,
- * the timeout no longer applies — content waits for the viewer to close it.
+ * Shows a pre-roll interstitial. Resolves when the ad is CLOSED, errors,
+ * fails to LOAD in time, or fails to actually APPEAR after show() (seen on
+ * iPad). Once the ad is visibly open, content waits for the viewer to close it.
  */
 export async function requestPreRollAd(videoId: string): Promise<void> {
   const ads = loadAds();
   if (!ads) return;
-  // ATT prompt (iPhone/iPad, first time only) must come before any ad request
-  await ensureTrackingPermission();
+
   const { AdEventType, InterstitialAd } = ads;
 
   return new Promise((resolve) => {
@@ -46,12 +46,15 @@ export async function requestPreRollAd(videoId: string): Promise<void> {
 
     let settled = false;
     let shown = false;
+    let opened = false;
+    let openTimer: ReturnType<typeof setTimeout> | undefined;
 
     const unsubs: Array<() => void> = [];
     function cleanup() {
       unsubs.forEach((u) => u());
       unsubs.length = 0;
-      clearTimeout(timer);
+      clearTimeout(loadTimer);
+      if (openTimer) clearTimeout(openTimer);
     }
     function finish() {
       if (settled) return;
@@ -60,11 +63,11 @@ export async function requestPreRollAd(videoId: string): Promise<void> {
       resolve();
     }
 
-    // Only guards the LOADING phase. If it fires, listeners are removed,
-    // so a late-loading ad can never pop up over the film.
-    const timer = setTimeout(() => {
+    // Guards the LOADING phase. If it fires, listeners are removed,
+    // so a late-loading ad can never pop up over content.
+    const loadTimer = setTimeout(() => {
       if (!shown) {
-        console.warn(`[ads] Pre-roll load timed out for video ${videoId}`);
+        console.warn(`[ads] Pre-roll load timed out for ${videoId}`);
         finish();
       }
     }, LOAD_TIMEOUT_MS);
@@ -73,11 +76,27 @@ export async function requestPreRollAd(videoId: string): Promise<void> {
       interstitial.addAdEventListener(AdEventType.LOADED, () => {
         if (settled) return;
         shown = true;
-        clearTimeout(timer);
+        clearTimeout(loadTimer);
+
+        // Watchdog: if the ad never actually appears, don't block content.
+        openTimer = setTimeout(() => {
+          if (!opened) {
+            console.warn(`[ads] Pre-roll never opened for ${videoId}`);
+            finish();
+          }
+        }, OPEN_TIMEOUT_MS);
+
         interstitial.show().catch((err: unknown) => {
-          console.warn(`[ads] Pre-roll show failed for video ${videoId}:`, err);
+          console.warn(`[ads] Pre-roll show failed for ${videoId}:`, err);
           finish();
         });
+      }),
+    );
+
+    unsubs.push(
+      interstitial.addAdEventListener(AdEventType.OPENED, () => {
+        opened = true;
+        if (openTimer) clearTimeout(openTimer);
       }),
     );
 
@@ -87,7 +106,7 @@ export async function requestPreRollAd(videoId: string): Promise<void> {
 
     unsubs.push(
       interstitial.addAdEventListener(AdEventType.ERROR, (error) => {
-        console.warn(`[ads] Pre-roll ad failed for video ${videoId}:`, error);
+        console.warn(`[ads] Pre-roll ad failed for ${videoId}:`, error);
         finish();
       }),
     );
