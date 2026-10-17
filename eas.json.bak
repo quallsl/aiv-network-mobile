@@ -1,0 +1,50 @@
+{
+  "cli": {
+    "version": ">= 21.2.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "image": "latest"
+      },
+      "android": {
+        "image": "latest"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "image": "latest"
+      },
+      "android": {
+        "image": "latest"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "ios": {
+        "image": "latest"
+      },
+      "android": {
+        "image": "latest"
+      }
+    },
+    "production-tv": {
+      "extends": "production",
+      "env": { "EXPO_TV": "1" },
+      "ios": {
+        "image": "latest"
+      }
+    }
+  },
+   "submit": {
+  "production": {
+    "ios": { "ascAppId": "6795188962" }
+  },
+  "production-tv": {
+    "ios": { "ascAppId": "6795188962" }
+  }
+}

@@ -44,6 +44,9 @@ export default function VideoPlayer({
           style={styles.video}
           controls
           paused={false}
+          allowsExternalPlayback
+          ignoreSilentSwitch="ignore"
+          playInBackground={false}
           resizeMode="contain"
           onLoad={() => setLoading(false)}
           onError={(e) => console.error("[player] playback error:", e)}

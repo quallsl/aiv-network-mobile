@@ -40,8 +40,11 @@
       }
     }
   },
-    "submit": {
-    "production": {},
-    "production-tv": {}
-    }
+   "submit": {
+  "production": {
+    "ios": { "ascAppId": "6795188962" }
+  },
+  "production-tv": {
+    "ios": { "ascAppId": "6795188962" }
   }
+}}
